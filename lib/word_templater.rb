@@ -2,6 +2,19 @@ require 'zip/zipfilesystem'
 
 class WordTemplater
 
+  # Use .docx as reusable templates
+  # 
+  # Example:
+  # buffer = WordTemplater.replace_file_with_content('path/to/mydocument.docx',
+  #    {
+  #      :client_email1 => 'test@example.com',
+  #      :client_phone1 => '555-555-5555',
+  #    })
+  # # In Rails you can send a word document via send_data
+  # send_data buffer.string, :filename => 'REPC.docx'
+  # # Or save the output to a word file
+  # File.open("path/to/mydocument.docx", "wb") {|f| f.write(buffer.string) }
+
   def self.available_tags
     {
       :example1 => '943 E Sunset Ave',
@@ -21,7 +34,7 @@ class WordTemplater
     /(?<=\|\|)\w{3,}(?=\|\|)/
   end
   
-  # Cann pass in the same arguments here for available_tags as in the params for generate_tags_for
+  # Can pass in the same arguments here for available_tags as in the params for generate_tags_for
   def self.replace_file_with_content(file_path, *available_tags)
     # Rubyzip doesn't save it right unless saved like this: https://gist.github.com/e7d2855435654e1ebc52
     zf = Zip::ZipFile.new(file_path) # Put original file name here
