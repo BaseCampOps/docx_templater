@@ -1,9 +1,9 @@
-word_templater
+Word Templater
 ==============
 
 Use .docx as reusable templates
    
-     Example:
+Example usage:
      buffer = WordTemplater.replace_file_with_content('path/to/mydocument.docx',
         {
           :client_email1 => 'test@example.com',

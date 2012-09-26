@@ -34,6 +34,10 @@ class WordTemplater
     /(?<=\|\|)\w{3,}(?=\|\|)/
   end
   
+  def self.just_label_regex
+    /(?<=>)(\w{3,})(?=<)/
+  end
+  
   # Can pass in the same arguments here for available_tags as in the params for generate_tags_for
   def self.replace_file_with_content(file_path, *available_tags)
     # Rubyzip doesn't save it right unless saved like this: https://gist.github.com/e7d2855435654e1ebc52
@@ -59,6 +63,12 @@ class WordTemplater
               tag_name = self.malformed_tag_regex.match(tag)
               tag_name ||= self.well_formed_tag_regex.match(tag)
               tag_name ||= ''
+              # This will handle instances where someone edits just part of a tag and Word wraps that part in more XML
+              words = tag.scan(self.just_label_regex).flatten!
+              if words.respond_to?(:size) && words.size > 1
+                #Then the tag was split by word
+                tag_name = words.join('')
+              end
               tag_name = tag_name.to_s.to_sym
               # if in the available tag list, replace with the new value
               if available_tags.has_key?(tag_name)
@@ -66,6 +76,7 @@ class WordTemplater
               end
             end
           end
+          puts file_content
           out.write file_content
         end
       end
@@ -76,7 +87,7 @@ class WordTemplater
   
   # Pass in records and this will return a list of available tags for all of the models
   # Can also pass in a non mongoid record such as a hash and it will be automatically merged into the tags hash
-  # Can also include a has with :data => Mongoid record, :prefix => 'custom_prefix_'
+  # Can also include a Hash with :data => Mongoid record, :prefix => 'custom_prefix'
   # Example WordTemplater.generate_tags_for(@deal.property, {:client_first_name => 'Paul'}, {:data => @deal.user, :prefix => 'client'}))
   def self.generate_tags_for(*args)
     attributes = {}
