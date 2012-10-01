@@ -35,7 +35,7 @@ class WordTemplater
   end
   
   def self.just_label_regex
-    /(?<=>)(\w{3,})(?=<)/
+    /(?<=>)(\w{3,})/
   end
   
   # Can pass in the same arguments here for available_tags as in the params for generate_tags_for
