@@ -55,7 +55,7 @@ class WordTemplater
           file_content = e.get_input_stream.read
           out.put_next_entry(e.name)
           # If this is the xml file with actual content
-          if e.name == 'word/document.xml'
+          if e.name == 'word/document.xml' || e.name.include?('header') || e.name.include?('footer')
             possible_tags = file_content.scan(all_tags_regex)
             # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
             possible_tags.each do |tag|
