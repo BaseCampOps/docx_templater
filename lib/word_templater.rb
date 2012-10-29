@@ -111,10 +111,3 @@ class WordTemplater
   end
   
 end
-
-
-#buffer = WordTemplater.replace_file_with_content('./REPC.docx')
-# Saves it to a file, but could easily just be sent to the browser without touching the file system
-#File.open("latest.docx", "wb") {|f| f.write(buffer.string) }
-
-
