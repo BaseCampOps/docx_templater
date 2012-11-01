@@ -72,16 +72,13 @@ class WordTemplater
   end
   
   # Can pass in the same arguments here for available_tags as in the params for generate_tags_for
-  def self.replace_file_with_content(file_path, *available_tags)
+  def self.replace_file_with_content(file_path, data_provider)
     # Rubyzip doesn't save it right unless saved like this: https://gist.github.com/e7d2855435654e1ebc52
     zf = Zip::ZipFile.new(file_path) # Put original file name here
-    
-    if available_tags.is_a?(Array)
-      available_tags = self.generate_tags_for(available_tags)
-    end
+
     buffer = Zip::ZipOutputStream.write_buffer do |out|
       zf.entries.each do |e|
-        self.process_entry(e, out, available_tags)
+        self.process_entry(e, out, data_provider)
       end
     end
     # You can save this buffer or send it with rails via send_data
