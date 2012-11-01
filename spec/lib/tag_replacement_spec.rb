@@ -13,7 +13,7 @@ describe WordTemplater do
       str.should include("||header||")
       str.should_not include("Woohoo!")
 
-      buffer = ::WordTemplater.replace_file_with_content( file_path, replacements )
+      buffer = ::WordTemplater.new.replace_file_with_content( file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
       tf.write buffer.string
       tf.close
@@ -30,7 +30,7 @@ describe WordTemplater do
       str.should_not include("2012-01-01")
       str.should_not include("Footsies")
 
-      buffer = ::WordTemplater.replace_file_with_content( file_path, replacements )
+      buffer = ::WordTemplater.new.replace_file_with_content( file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
       tf.write buffer.string
       tf.close
@@ -54,7 +54,7 @@ describe WordTemplater do
       str.should_not include("Working Title Please Ignore")
       str.should_not include("FANTASTIC")
 
-      buffer = ::WordTemplater.replace_file_with_content( file_path, replacements )
+      buffer = ::WordTemplater.new.replace_file_with_content( file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
       tf.write buffer.string
       tf.close
@@ -70,7 +70,7 @@ describe WordTemplater do
       str = get_body_string(file_path)
       str.should include('||a</w:t></w:r><w:r><w:t>dj</w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:u w:val="single"/></w:rPr><w:t>ect</w:t></w:r><w:r><w:t>ive|</w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:i/></w:rPr><w:t>|')
 
-      buffer = ::WordTemplater.replace_file_with_content( file_path, replacements )
+      buffer = ::WordTemplater.new.replace_file_with_content( file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
       tf.write buffer.string
       tf.close

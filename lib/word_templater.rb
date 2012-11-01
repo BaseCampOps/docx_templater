@@ -1,91 +1,36 @@
 require 'zip/zipfilesystem'
 
+# Use .docx as reusable templates
+# 
+# Example:
+# buffer = WordTemplater.replace_file_with_content('path/to/mydocument.docx',
+#    {
+#      :client_email1 => 'test@example.com',
+#      :client_phone1 => '555-555-5555',
+#    })
+# # In Rails you can send a word document via send_data
+# send_data buffer.string, :filename => 'REPC.docx'
+# # Or save the output to a word file
+# File.open("path/to/mydocument.docx", "wb") {|f| f.write(buffer.string) }
 class WordTemplater
+  def initialize(opts = {})
+    @options = opts
+  end
 
-  # Use .docx as reusable templates
-  # 
-  # Example:
-  # buffer = WordTemplater.replace_file_with_content('path/to/mydocument.docx',
-  #    {
-  #      :client_email1 => 'test@example.com',
-  #      :client_phone1 => '555-555-5555',
-  #    })
-  # # In Rails you can send a word document via send_data
-  # send_data buffer.string, :filename => 'REPC.docx'
-  # # Or save the output to a word file
-  # File.open("path/to/mydocument.docx", "wb") {|f| f.write(buffer.string) }
-  
-  def self.all_tags_regex
-    /\|\|\<*.+?\>*\|\|/
-  end
-  
-  def self.malformed_tag_regex
-    /(?<=>)\w{3,}(?=<)/
-  end
-  
-  def self.well_formed_tag_regex
-    /(?<=\|\|)\w{3,}(?=\|\|)/
-  end
-  
-  def self.just_label_regex
-    /(?<=>)(\w{3,})/
-  end
-  
-  def self.entry_requires_replacement?(entry)
-    entry.ftype != :directory && entry.name =~ /document|header|footer/
-  end
-  
-  def self.get_entry_content(entry, data_provider)
-    if self.entry_requires_replacement?(entry)
-      self.replace_entry_content(entry.get_input_stream.read, data_provider)
-    else
-      entry.get_input_stream.read
-    end
-  end
-  
-  def self.process_entry(entry, output, data_provider)
-    output.put_next_entry(entry.name)
-    output.write self.get_entry_content(entry, data_provider) if entry.ftype != :directory
-  end
-  
-  def self.replace_entry_content(str, data_provider)
-    possible_tags = str.scan(all_tags_regex)
-    # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
-    possible_tags.each do |tag|
-      #extracts just the tag name
-      tag_name = self.malformed_tag_regex.match(tag)
-      tag_name ||= self.well_formed_tag_regex.match(tag)
-      tag_name ||= ''
-      # This will handle instances where someone edits just part of a tag and Word wraps that part in more XML
-      words = tag.scan(self.just_label_regex).flatten!
-      if words.respond_to?(:size) && words.size > 1
-        #Then the tag was split by word
-        tag_name = words.join('')
-      end
-      tag_name = tag_name.to_s.to_sym
-      # if in the available tag list, replace with the new value
-      if data_provider.has_key?(tag_name)
-        str.gsub!(tag, "#{data_provider[tag_name]}")
-      end
-    end
-    str
-  end
-  
-  # Can pass in the same arguments here for available_tags as in the params for generate_tags_for
-  def self.replace_file_with_content(file_path, data_provider)
+  def replace_file_with_content(file_path, data_provider)
     # Rubyzip doesn't save it right unless saved like this: https://gist.github.com/e7d2855435654e1ebc52
     zf = Zip::ZipFile.new(file_path) # Put original file name here
 
     buffer = Zip::ZipOutputStream.write_buffer do |out|
       zf.entries.each do |e|
-        self.process_entry(e, out, data_provider)
+        process_entry(e, out, data_provider)
       end
     end
     # You can save this buffer or send it with rails via send_data
     return buffer
   end
-  
-  def self.generate_tags_for(*args)
+
+  def generate_tags_for(*args)
     attributes = {}
     args.flatten!
     # Prefixes the model name or custom prefix. Makes it so we don't having naming clashes when used with records from multiple m
@@ -105,5 +50,62 @@ class WordTemplater
       end
     end
     attributes
+  end
+
+  private
+  def all_tags_regex
+    /\|\|\<*.+?\>*\|\|/
+  end
+  
+  def malformed_tag_regex
+    /(?<=>)\w{3,}(?=<)/
+  end
+  
+  def well_formed_tag_regex
+    /(?<=\|\|)\w{3,}(?=\|\|)/
+  end
+  
+  def just_label_regex
+    /(?<=>)(\w{3,})/
+  end
+  
+  def entry_requires_replacement?(entry)
+    entry.ftype != :directory && entry.name =~ /document|header|footer/
+  end
+  
+  def get_entry_content(entry, data_provider)
+    if entry_requires_replacement?(entry)
+      replace_entry_content(entry.get_input_stream.read, data_provider)
+    else
+      entry.get_input_stream.read
+    end
+  end
+  
+  def process_entry(entry, output, data_provider)
+    output.put_next_entry(entry.name)
+    output.write get_entry_content(entry, data_provider) if entry.ftype != :directory
+  end
+  
+  def replace_entry_content(str, data_provider)
+    possible_tags = str.scan(all_tags_regex)
+    # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
+    possible_tags.each do |tag|
+      #extracts just the tag name
+      tag_name = malformed_tag_regex.match(tag)
+      tag_name ||= well_formed_tag_regex.match(tag)
+      tag_name ||= ''
+      # This will handle instances where someone edits just part of a tag and Word wraps that part in more XML
+      words = tag.scan(just_label_regex).flatten!
+      if words.respond_to?(:size) && words.size > 1
+        #Then the tag was split by word
+        tag_name = words.join('')
+      end
+      tag_name = tag_name.to_s.to_sym
+      # if in the available tag list, replace with the new value
+      if data_provider.has_key?(tag_name)
+        str.gsub!(tag, "#{data_provider[tag_name]}")
+      end
+    end
+    str
   end
 end
