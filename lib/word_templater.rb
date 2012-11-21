@@ -1,4 +1,5 @@
 require 'zip/zipfilesystem'
+require 'htmlentities'
 
 class WordTemplater
 
@@ -56,7 +57,6 @@ class WordTemplater
           out.put_next_entry(e.name)
           # If this is the xml file with actual content
           if e.name == 'word/document.xml' || e.name.include?('header') || e.name.include?('footer')
-            file_content.gsub!("<w:t>||</w:t>", "||")
             possible_tags = file_content.scan(all_tags_regex)
             # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
             possible_tags.each do |tag|
@@ -73,7 +73,9 @@ class WordTemplater
               tag_name = tag_name.to_s.to_sym
               # if in the available tag list, replace with the new value
               if available_tags.has_key?(tag_name)
-                file_content.gsub!(tag, "#{available_tags[tag_name]}")
+                encoder = HTMLEntities.new
+                content = encoder.encode("#{available_tags[tag_name]}")
+                file_content.gsub!(tag, content)
               end
             end
           end
