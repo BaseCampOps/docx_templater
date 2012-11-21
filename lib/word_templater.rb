@@ -77,7 +77,6 @@ class WordTemplater
               end
             end
           end
-          puts file_content
           out.write file_content
         end
       end
