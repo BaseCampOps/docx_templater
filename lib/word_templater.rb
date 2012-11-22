@@ -1,4 +1,5 @@
 require 'zip/zipfilesystem'
+require 'htmlentities'
 
 # Use .docx as reusable templates
 # 
@@ -103,7 +104,9 @@ class WordTemplater
       tag_name = tag_name.to_s.to_sym
       # if in the available tag list, replace with the new value
       if data_provider.has_key?(tag_name)
-        str.gsub!(tag, "#{data_provider[tag_name]}")
+        encoder = HTMLEntities.new
+        content = encoder.encode("#{data_provider[tag_name]}")
+        str.gsub!(tag, content)
       end
     end
     str
