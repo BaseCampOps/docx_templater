@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/BaseCampOps/word_templater)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/BaseCampOps/docx_templater)
 
 Docx Templater
 ==============
