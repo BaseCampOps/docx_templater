@@ -17,3 +17,10 @@ Example usage:
      # Or save the output to a word file
      File.open("path/to/mydocument.docx", "wb") {|f| f.write(buffer.string) }
 ```
+
+Planned Changes
+===============
+
+* support for different tags (ie replace &lt;&lt;foo&gt;&gt; instead of ||foo||)
+* support for tags with formatting in the middle (see failing spec)
+* refactor complex methods (see code climate)
