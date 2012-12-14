@@ -54,6 +54,7 @@ class DocxTemplater
   end
 
   private
+  
   def all_tags_regex
     /\|\|\<*.+?\>*\|\|/
   end
@@ -91,16 +92,8 @@ class DocxTemplater
     possible_tags = str.scan(all_tags_regex)
     # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
     possible_tags.each do |tag|
-      #extracts just the tag name
-      tag_name = malformed_tag_regex.match(tag)
-      tag_name ||= well_formed_tag_regex.match(tag)
-      tag_name ||= ''
-      # This will handle instances where someone edits just part of a tag and Word wraps that part in more XML
-      words = tag.scan(just_label_regex).flatten!
-      if words.respond_to?(:size) && words.size > 1
-        #Then the tag was split by word
-        tag_name = words.join('')
-      end
+      tag_name = extract_tag_name(tag)
+      tag_name = squish_tag_name(tag, tag_name)
       tag_name = tag_name.to_s.to_sym
       # if in the available tag list, replace with the new value
       if data_provider.has_key?(tag_name)
@@ -111,4 +104,23 @@ class DocxTemplater
     end
     str
   end
+  
+  # extracts just the tag name
+  def extract_tag_name(tag)
+    malformed_tag_regex.match(tag)
+    tag_name ||= well_formed_tag_regex.match(tag)
+    tag_name ||= ''
+  end
+  
+  # This will handle most instances where someone edits just part of a tag and Word wraps that part in more XML
+  # If the tag did not have any extra xml formatting we just return the passed in tag_name
+  def squish_tag_name(tag, tag_name)
+    words = tag.scan(just_label_regex).flatten!
+    if words.respond_to?(:size) && words.size > 1
+      #Then the tag was split by word
+      tag_name = words.join('')
+    end
+    tag_name
+  end
+  
 end
