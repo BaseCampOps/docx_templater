@@ -11,6 +11,7 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+*.swp
 
 # YARD artifacts
 .yardoc
@@ -19,7 +20,5 @@ doc/
 
 *.esproj
 *.DS_Store
-
-*.espressostorage
 
 *.espressostorage
