@@ -36,6 +36,10 @@ class DocxTemplater
     Docx::ArgumentCombiner.new(*args).attributes
   end
 
+  def spellchecker_nodes
+    ["<w:proofErr w:type=\"spellStart\"/>", "<w:proofErr w:type=\"gramStart\"/>", "<w:proofErr w:type=\"spellEnd\"/>", "<w:proofErr w:type=\"gramEnd\"/>"]
+  end
+
   private
   
   def all_tags_regex
@@ -51,9 +55,9 @@ class DocxTemplater
   end
   
   def just_label_regex
-    /(?<=>)(\w{3,})/
+    /(?<=>|\|)(\w{3,})/
   end
-  
+
   def entry_requires_replacement?(entry)
     entry.ftype != :directory && entry.name =~ /document|header|footer/
   end
@@ -75,8 +79,7 @@ class DocxTemplater
 
   # Removes the nodes that mark spelling errors and sometimes cause errors in placeholder replacement
   def remove_spellchecker_nodes(file_string)
-    nodes_to_remove = ["<w:proofErr w:type=\"spellStart\"/>", "<w:proofErr w:type=\"gramStart\"/>", "<w:proofErr w:type=\"spellEnd\"/>", "<w:proofErr w:type=\"gramEnd\"/>"]
-    nodes_to_remove.each do |node|
+    spellchecker_nodes.each do |node|
       file_string.gsub! node, ""
     end
     file_string
@@ -86,6 +89,7 @@ class DocxTemplater
     possible_tags = str.scan(all_tags_regex)
     # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
     possible_tags.each do |tag|
+      puts "Possible tag: #{tag}"
       tag_name = extract_tag_name(tag)
       tag_name = squish_tag_name(tag, tag_name)
       tag_name = tag_name.to_s.to_sym
@@ -110,6 +114,7 @@ class DocxTemplater
   # If the tag did not have any extra xml formatting we just return the passed in tag_name
   def squish_tag_name(tag, tag_name)
     words = tag.scan(just_label_regex).flatten!
+    puts "Words: #{words}"
     if words.respond_to?(:size) && words.size > 1
       #Then the tag was split by word
       tag_name = words.join('')

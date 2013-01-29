@@ -45,7 +45,7 @@ describe DocxTemplater do
   
   describe "body" do
     let(:replacements){
-      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC"}
+      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC", :total_loan_amount_currency_words => "Three Hundred"}
     }
     it "finds and replaces placeholders in the body of the document" do
       str = get_body_string(file_path)
@@ -62,8 +62,10 @@ describe DocxTemplater do
       str = get_body_string(tf.path)
       str.should_not include("||title||")
       str.should_not include("||adjective||")
+      str.should_not include("||total_loan_amount_currency_words||")
       str.should include("Working Title Please Ignore")
       str.should include("FANTASTIC")
+      str.should include("Three Hundred")
     end
     
     it "finds and replaces placeholders with formatting" do
