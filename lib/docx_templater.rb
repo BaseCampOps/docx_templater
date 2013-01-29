@@ -61,7 +61,7 @@ class DocxTemplater
   def get_entry_content(entry, data_provider)
     file_string = entry.get_input_stream.read
     if entry_requires_replacement?(entry)
-      remove_spellchecker_nodes(file_string)
+      file_string = remove_spellchecker_nodes(file_string)
       replace_entry_content(file_string, data_provider)
     else
       file_string
@@ -79,6 +79,7 @@ class DocxTemplater
     nodes_to_remove.each do |node|
       file_string.gsub! node, ""
     end
+    file_string
   end
   
   def replace_entry_content(str, data_provider)
