@@ -89,7 +89,6 @@ class DocxTemplater
     possible_tags = str.scan(all_tags_regex)
     # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
     possible_tags.each do |tag|
-      puts "Possible tag: #{tag}"
       tag_name = extract_tag_name(tag)
       tag_name = squish_tag_name(tag, tag_name)
       tag_name = tag_name.to_s.to_sym
@@ -114,7 +113,6 @@ class DocxTemplater
   # If the tag did not have any extra xml formatting we just return the passed in tag_name
   def squish_tag_name(tag, tag_name)
     words = tag.scan(just_label_regex).flatten!
-    puts "Words: #{words}"
     if words.respond_to?(:size) && words.size > 1
       #Then the tag was split by word
       tag_name = words.join('')
