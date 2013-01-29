@@ -59,16 +59,26 @@ class DocxTemplater
   end
   
   def get_entry_content(entry, data_provider)
+    file_string = entry.get_input_stream.read
     if entry_requires_replacement?(entry)
-      replace_entry_content(entry.get_input_stream.read, data_provider)
+      remove_spellchecker_nodes(file_string)
+      replace_entry_content(file_string, data_provider)
     else
-      entry.get_input_stream.read
+      file_string
     end
   end
   
   def process_entry(entry, output, data_provider)
     output.put_next_entry(entry.name)
     output.write get_entry_content(entry, data_provider) if entry.ftype != :directory
+  end
+
+  # Removes the nodes that mark spelling errors and sometimes cause errors in placeholder replacement
+  def remove_spellchecker_nodes(file_string)
+    nodes_to_remove = ["<w:proofErr w:type=\"spellStart\"/>", "<w:proofErr w:type=\"gramStart\"/>", "<w:proofErr w:type=\"spellEnd\"/>", "<w:proofErr w:type=\"gramEnd\"/>"]
+    nodes_to_remove.each do |node|
+      file_string.gsub! node, ""
+    end
   end
   
   def replace_entry_content(str, data_provider)
