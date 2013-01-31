@@ -12,6 +12,7 @@ test/tmp
 test/version_tmp
 tmp
 *.swp
+*.swo
 
 # YARD artifacts
 .yardoc
@@ -20,5 +21,5 @@ doc/
 
 *.esproj
 *.DS_Store
-
+*.sublime*
 *.espressostorage
