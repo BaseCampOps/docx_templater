@@ -23,5 +23,3 @@ Planned Changes
 ===============
 
 * support for different tags (ie replace &lt;&lt;foo&gt;&gt; instead of ||foo||)
-* support for tags with formatting in the middle (see failing spec)
-* refactor complex methods (see code climate)
