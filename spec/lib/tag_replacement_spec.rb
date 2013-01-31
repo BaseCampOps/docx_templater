@@ -45,7 +45,7 @@ describe DocxTemplater do
   
   describe "body" do
     let(:replacements){
-      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC", :total_loan_amount_currency_words => "Three Hundred"}
+      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC", :total_loan_amount_currency_words => "Three Hundred", :super_adjective => "BOOYAH"}
     }
     it "finds and replaces placeholders in the body of the document" do
       str = get_body_string(file_path)
@@ -70,7 +70,10 @@ describe DocxTemplater do
     
     it "finds and replaces placeholders with formatting" do
       str = get_body_string(file_path)
-      str.should include('||a</w:t></w:r><w:r><w:t>dj</w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:u w:val="single"/></w:rPr><w:t>ect</w:t></w:r><w:r><w:t>ive|</w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:i/></w:rPr><w:t>|')
+      fragments = ['h ||','supe','r_adject','ive','|','| f']
+      fragments.each do |fragment|
+        str.should include(fragment)
+      end
 
       buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
@@ -78,8 +81,10 @@ describe DocxTemplater do
       tf.close
 
       str = get_body_string(tf.path)
-      str.should_not include('||a</w:t></w:r><w:r><w:t>dj</w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:u w:val="single"/></w:rPr><w:t>ect</w:t></w:r><w:r><w:t>ive|</w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:i/></w:rPr><w:t>|')
-      str.should include('FANTASTIC</w:t></w:r><w:r><w:t></w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:u w:val="single"/></w:rPr><w:t></w:t></w:r><w:r><w:t></w:t></w:r><w:r w:rsidRPr="009E187F"><w:rPr><w:i/></w:rPr><w:t>')
+      fragments.each do |fragment|
+        str.should_not include(fragment)
+      end
+      str.should include('BOOYAH')
     end
   end
 end

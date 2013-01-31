@@ -1,7 +1,7 @@
 require 'zip/zipfilesystem'
 require 'htmlentities'
 require 'docx/argument_combiner'
-require 'docx/placeholder_observer'
+require 'docx/document_replacer'
 
 # Use .docx as reusable templates
 # 
@@ -65,6 +65,8 @@ class DocxTemplater
   
   def get_entry_content(entry, data_provider)
     file_string = entry.get_input_stream.read
+    replacer = Docx::DocumentReplacer.new(file_string, data_provider)
+    return replacer.replaced
     if entry_requires_replacement?(entry)
       file_string = remove_spellchecker_nodes(file_string)
       replace_entry_content(file_string, data_provider)
