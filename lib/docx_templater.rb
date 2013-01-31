@@ -37,28 +37,6 @@ class DocxTemplater
     Docx::ArgumentCombiner.new(*args).attributes
   end
 
-  def spellchecker_nodes
-    ["<w:proofErr w:type=\"spellStart\"/>", "<w:proofErr w:type=\"gramStart\"/>", "<w:proofErr w:type=\"spellEnd\"/>", "<w:proofErr w:type=\"gramEnd\"/>"]
-  end
-
-  private
-  
-  def all_tags_regex
-    /\|\|\<*.+?\>*\|\|/
-  end
-  
-  def malformed_tag_regex
-    /(?<=>)\w{3,}(?=<)/
-  end
-  
-  def well_formed_tag_regex
-    /(?<=\|\|)\w{3,}(?=\|\|)/
-  end
-  
-  def just_label_regex
-    /(?<=>|\|)(\w{3,})/
-  end
-
   def entry_requires_replacement?(entry)
     entry.ftype != :directory && entry.name =~ /document|header|footer/
   end
@@ -66,61 +44,11 @@ class DocxTemplater
   def get_entry_content(entry, data_provider)
     file_string = entry.get_input_stream.read
     replacer = Docx::DocumentReplacer.new(file_string, data_provider)
-    return replacer.replaced
-    if entry_requires_replacement?(entry)
-      file_string = remove_spellchecker_nodes(file_string)
-      replace_entry_content(file_string, data_provider)
-    else
-      file_string
-    end
+    replacer.replaced
   end
   
   def process_entry(entry, output, data_provider)
     output.put_next_entry(entry.name)
     output.write get_entry_content(entry, data_provider) if entry.ftype != :directory
   end
-
-  # Removes the nodes that mark spelling errors and sometimes cause errors in placeholder replacement
-  def remove_spellchecker_nodes(file_string)
-    spellchecker_nodes.each do |node|
-      file_string.gsub! node, ""
-    end
-    file_string
-  end
-  
-  def replace_entry_content(str, data_provider)
-    possible_tags = str.scan(all_tags_regex)
-    # Loops through what looks like are tags. Anything with ||name|| even if they are not in the available tags list
-    possible_tags.each do |tag|
-      tag_name = extract_tag_name(tag)
-      tag_name = squish_tag_name(tag, tag_name)
-      tag_name = tag_name.to_s.to_sym
-      # if in the available tag list, replace with the new value
-      if data_provider.has_key?(tag_name)
-        encoder = HTMLEntities.new
-        content = encoder.encode("#{data_provider[tag_name]}")
-        str.gsub!(tag, content)
-      end
-    end
-    str
-  end
-  
-  # extracts just the tag name
-  def extract_tag_name(tag)
-    malformed_tag_regex.match(tag)
-    tag_name ||= well_formed_tag_regex.match(tag)
-    tag_name ||= ''
-  end
-  
-  # This will handle most instances where someone edits just part of a tag and Word wraps that part in more XML
-  # If the tag did not have any extra xml formatting we just return the passed in tag_name
-  def squish_tag_name(tag, tag_name)
-    words = tag.scan(just_label_regex).flatten!
-    if words.respond_to?(:size) && words.size > 1
-      #Then the tag was split by word
-      tag_name = words.join('')
-    end
-    tag_name
-  end
-  
 end
