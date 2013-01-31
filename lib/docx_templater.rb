@@ -1,6 +1,7 @@
 require 'zip/zipfilesystem'
 require 'htmlentities'
 require 'docx/argument_combiner'
+require 'docx/placeholder_observer'
 
 # Use .docx as reusable templates
 # 
