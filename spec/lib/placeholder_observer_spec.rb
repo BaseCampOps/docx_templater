@@ -34,5 +34,12 @@ describe Docx::PlaceholderObserver do
       subject.next_node(n1)
       n1.value.should == 'Zombie Apocalypse is a Movie. Okay?'
     end
+
+    it "handles nil replacements" do
+      data_provider.should_receive(:[]).with('title').and_return(nil)
+      n1 = REXML::Text.new('||title||')
+      subject.next_node(n1)
+      n1.value.should == ''
+    end
   end
 end
