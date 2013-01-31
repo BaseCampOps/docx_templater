@@ -38,7 +38,7 @@ module Docx
       add_char_to_buffer(node,idx,c)
       if buffer[-2..-1] == '||'
         key = buffer[2..-3]
-        new_value = data_provider[key]
+        new_value = data_provider[key.to_sym]
         save_fix_for_later(new_value)
         self.state = :waiting_for_opening
         truncate_buffer
