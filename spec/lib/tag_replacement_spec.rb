@@ -45,7 +45,7 @@ describe DocxTemplater do
   
   describe "body" do
     let(:replacements){
-      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC", :total_loan_amount_currency_words => "Three Hundred", :super_adjective => "BOOYAH"}
+      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC", :total_loan_amount_currency_words => "Three Hundred", :super_adjective => "BOOYAH", :non_string => 200.0}
     }
     it "finds and replaces placeholders in the body of the document" do
       str = get_body_string(file_path)
@@ -86,5 +86,21 @@ describe DocxTemplater do
       end
       str.should include('BOOYAH')
     end
+
+    it "finds and replaces with content that is not a string" do
+      str = get_body_string(file_path)
+      str.should include("||non_string||")
+      str.should_not include("200.0")
+
+      buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
+      tf = Tempfile.new(["spec","docx"])
+      tf.write buffer.string
+      tf.close
+
+      str = get_body_string(tf.path)
+      str.should_not include("||non_string||")
+      str.should include("200.0")
+    end
+
   end
 end

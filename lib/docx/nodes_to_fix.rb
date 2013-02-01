@@ -11,7 +11,7 @@ module Docx
       @value = ''
     end
 
-    def remember(node,idx)
+    def remember(node, idx)
       new_node = current_node.nil? || current_node != node
       if new_node
         @current_node = node
@@ -22,7 +22,7 @@ module Docx
     end
 
     def fix
-      node_list.each do |obj|
+      @node_list.each do |obj|
         node = obj[:node]
         range = obj[:range]
         new_val = node.value
