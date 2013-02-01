@@ -43,8 +43,12 @@ class DocxTemplater
   
   def get_entry_content(entry, data_provider)
     file_string = entry.get_input_stream.read
-    replacer = Docx::DocumentReplacer.new(file_string, data_provider)
-    replacer.replaced
+    if entry_requires_replacement?(entry)
+      replacer = Docx::DocumentReplacer.new(file_string, data_provider)
+      replacer.replaced
+    else
+      file_string
+    end
   end
   
   def process_entry(entry, output, data_provider)
