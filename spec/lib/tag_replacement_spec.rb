@@ -70,7 +70,7 @@ describe DocxTemplater do
     
     it "finds and replaces placeholders with formatting" do
       str = get_body_string(file_path)
-      fragments = ['h ||','supe','r_adject','ive','|','| f']
+      fragments = ['h ||','supe','r_adject','ive','| f']
       fragments.each do |fragment|
         str.should include(fragment)
       end
