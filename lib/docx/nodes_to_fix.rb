@@ -11,13 +11,13 @@ module Docx
       @value = ''
     end
 
-    def remember(node, idx)
+    def remember(node, index)
       new_node = current_node.nil? || current_node != node
       if new_node
         @current_node = node
-        @node_list << {:node => node, :range => idx..idx}
+        @node_list << {:node => node, :range => index..index}
       else
-        @node_list.last[:range] = (node_list.last[:range].min)..idx
+        @node_list.last[:range] = (node_list.last[:range].min)..index
       end
     end
 
