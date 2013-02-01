@@ -26,7 +26,7 @@ module Docx
         node = obj[:node]
         range = obj[:range]
         new_val = node.value
-        new_val[range] = value || ''
+        new_val[range] = value.to_s || ''
         node.value = new_val
         self.value = nil
       end
