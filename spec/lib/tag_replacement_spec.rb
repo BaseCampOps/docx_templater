@@ -102,5 +102,18 @@ describe DocxTemplater do
       str.should include("200.0")
     end
 
+    it "If no data provider key matches, it should leave the placeholder" do
+      str = get_body_string(file_path)
+      str.should include("||stay_on_the_page||")
+
+      buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
+      tf = Tempfile.new(["spec","docx"])
+      tf.write buffer.string
+      tf.close
+
+      str = get_body_string(tf.path)
+      str.should include("||stay_on_the_page||")
+    end
+
   end
 end
