@@ -17,8 +17,11 @@ module Docx
       end
       make_fixes
     end
+
     private
+
     attr_accessor :state, :buffer, :nodes_to_fix
+    
     def next_char(node,idx,c)
       send(state, node, idx, c)
     end
