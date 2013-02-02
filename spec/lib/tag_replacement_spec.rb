@@ -45,7 +45,15 @@ describe DocxTemplater do
   
   describe "body" do
     let(:replacements){
-      {:title => "Working Title Please Ignore", :adjective => "FANTASTIC", :total_loan_amount_currency_words => "Three Hundred", :super_adjective => "BOOYAH", :non_string => 200.0}
+      {
+        :title => "Working Title Please Ignore",
+        :adjective => "FANTASTIC",
+        :total_loan_amount_currency_words => "Three Hundred",
+        :super_adjective => "BOOYAH",
+        :non_string => 200.0,
+        :side_on_side => "left",
+        :side_by_side => "right"
+      }
     }
     it "finds and replaces placeholders in the body of the document" do
       str = get_body_string(file_path)
@@ -104,7 +112,7 @@ describe DocxTemplater do
 
     it "If no data provider key matches, it should leave the placeholder" do
       str = get_body_string(file_path)
-      str.should include("||stay_on_the_page||")
+      str.should include("||stay_on_the_page")
 
       buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
@@ -112,7 +120,22 @@ describe DocxTemplater do
       tf.close
 
       str = get_body_string(tf.path)
-      str.should include("||stay_on_the_page||")
+      str.should include("||stay_on_the_page")
+    end
+
+    it "It should handle side by side placeholders" do
+      str = get_body_string(file_path)
+      str.should include("side")
+      str.should include("by_side")
+
+      buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
+      tf = Tempfile.new(["spec","docx"])
+      tf.write buffer.string
+      tf.close
+
+      str = get_body_string(tf.path)
+      str.should_not include("side")
+      str.should_not include("by_side")
     end
 
   end
