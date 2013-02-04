@@ -3,6 +3,7 @@ require 'zip/zipfilesystem'
 require 'tempfile'
 describe DocxTemplater do
   let(:file_path){ File.expand_path("../../fixtures/TestFile.docx",__FILE__) }
+  let(:spacing_file_path){ File.expand_path("../../fixtures/CorrectSpacing.docx",__FILE__) }
   
   describe "headers and footers" do
     let(:replacements){
@@ -142,10 +143,10 @@ describe DocxTemplater do
     end
 
     it "should correctly preserve spacing before and after placeholders" do
-      str = get_body_string(file_path)
+      str = get_body_string(spacing_file_path)
       str.should include("correct_spacing")
 
-      buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
+      buffer = ::DocxTemplater.new.replace_file_with_content( spacing_file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
       tf.write buffer.string
       tf.close
