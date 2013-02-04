@@ -53,6 +53,7 @@ describe DocxTemplater do
         :non_string => 200.0,
         :side => "lefty",
         :by_side => "righty",
+        :correct_spacing => "GIVE ME ROOM"
       }
     }
     it "finds and replaces placeholders in the body of the document" do
@@ -123,7 +124,7 @@ describe DocxTemplater do
       str.should include("||stay_on_the_page")
     end
 
-    it "It should handle side by side placeholders" do
+    it "should handle side by side placeholders" do
       str = get_body_string(file_path)
       str.should include("side")
       str.should include("by_side")
@@ -138,6 +139,20 @@ describe DocxTemplater do
       str.should_not include("by_side")
       str.should include("lefty")
       str.should include("righty")
+    end
+
+    it "should correctly preserve spacing before and after placeholders" do
+      str = get_body_string(file_path)
+      str.should include("correct_spacing")
+
+      buffer = ::DocxTemplater.new.replace_file_with_content( file_path, replacements )
+      tf = Tempfile.new(["spec","docx"])
+      tf.write buffer.string
+      tf.close
+
+      str = get_body_string(tf.path)
+      str.should_not include("correct_spacing")
+      str.should include("   GIVE ME ROOM    ")
     end
 
   end
