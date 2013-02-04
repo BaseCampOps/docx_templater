@@ -146,7 +146,8 @@ describe DocxTemplater do
       replacements[:placeholders] = "space"
       replacements[:with_spaces] = "balls"
       str = get_body_string(spacing_file_path)
-      str.should include("Test ||placeholders|| ||with_spaces|| ?")
+      str.should include("Test ||placeholders|| ||with_spaces|")
+      str.should include("<w:t>|      body time</w:t>")
 
       buffer = ::DocxTemplater.new.replace_file_with_content( spacing_file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
@@ -154,8 +155,10 @@ describe DocxTemplater do
       tf.close
 
       str = get_body_string(tf.path)
-      str.should_not include("Test ||placeholders|| ||with_spaces|| ?")
-      str.should include("Test space balls ?")
+      str.should_not include("Test ||placeholders|| ||with_spaces|")
+      str.should_not include("|      body time")
+      str.should include("Test space balls")
+      str.should include("<w:t xml:space='preserve'>      body time</w:t>")
     end
 
   end
