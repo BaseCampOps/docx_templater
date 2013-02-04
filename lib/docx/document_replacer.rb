@@ -10,6 +10,7 @@ module Docx
       @doc = REXML::Document.new(str)
       @observer = Docx::PlaceholderObserver.new(data_provider)
       walk_node(@doc.root)
+      @observer.end_of_document
     end
 
     def replaced
