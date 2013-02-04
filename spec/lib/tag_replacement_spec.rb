@@ -143,8 +143,10 @@ describe DocxTemplater do
     end
 
     it "should correctly preserve spacing before and after placeholders" do
+      replacements[:placeholders] = "space"
+      replacements[:with_spaces] = "balls"
       str = get_body_string(spacing_file_path)
-      str.should include("correct_spacing")
+      str.should include("Test ||placeholders|| ||with_spaces|| ?")
 
       buffer = ::DocxTemplater.new.replace_file_with_content( spacing_file_path, replacements )
       tf = Tempfile.new(["spec","docx"])
@@ -152,8 +154,8 @@ describe DocxTemplater do
       tf.close
 
       str = get_body_string(tf.path)
-      str.should_not include("correct_spacing")
-      str.should include("   GIVE ME ROOM    ")
+      str.should_not include("Test ||placeholders|| ||with_spaces|| ?")
+      str.should include("Test space balls ?")
     end
 
   end
