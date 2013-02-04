@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Docx::PlaceholderObserver do
-  describe "#next_node" do
+  describe "#next_node and #end_of_document" do
     subject{ Docx::PlaceholderObserver.new(data_provider) }
     let(:data_provider) do 
       r = double("data_provider")

@@ -28,6 +28,9 @@ module Docx
         new_val = node.value
         new_val[range] = value.to_s || ''
         node.value = new_val
+        if new_val =~ /^\s+/ && node.parent
+          node.parent.add_attribute('xml:space', 'preserve')
+        end
         self.value = nil
       end
     end
