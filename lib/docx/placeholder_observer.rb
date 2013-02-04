@@ -15,6 +15,9 @@ module Docx
       node.value.split(//).each_with_index do |c,index|
         next_char(node,index,c)
       end
+    end
+
+    def end_of_document
       make_fixes
     end
 

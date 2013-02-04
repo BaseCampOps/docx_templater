@@ -51,8 +51,8 @@ describe DocxTemplater do
         :total_loan_amount_currency_words => "Three Hundred",
         :super_adjective => "BOOYAH",
         :non_string => 200.0,
-        :side_on_side => "left",
-        :side_by_side => "right"
+        :side => "lefty",
+        :by_side => "righty",
       }
     }
     it "finds and replaces placeholders in the body of the document" do
@@ -136,6 +136,8 @@ describe DocxTemplater do
       str = get_body_string(tf.path)
       str.should_not include("side")
       str.should_not include("by_side")
+      str.should include("lefty")
+      str.should include("righty")
     end
 
   end

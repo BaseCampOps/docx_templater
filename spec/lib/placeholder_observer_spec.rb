@@ -14,6 +14,7 @@ describe Docx::PlaceholderObserver do
       n1.should_receive(:value=).with('dflkja sdf The Thing slkjasdlkj')
 
       subject.next_node(n1)
+      subject.end_of_document
     end
 
     it "finds placeholders among several nodes" do
@@ -28,6 +29,7 @@ describe Docx::PlaceholderObserver do
       subject.next_node(n1)
       subject.next_node(n2)
       subject.next_node(n3)
+      subject.end_of_document
     end
 
     it "handles multiple placeholders in a single node correctly" do
@@ -36,6 +38,7 @@ describe Docx::PlaceholderObserver do
       n1 = REXML::Text.new('||title|| is a ||subject||. Okay?')
 
       subject.next_node(n1)
+      subject.end_of_document
       n1.value.should == 'Zombie Apocalypse is a Movie. Okay?'
     end
 
@@ -43,6 +46,7 @@ describe Docx::PlaceholderObserver do
       data_provider.should_receive(:[]).with(:title).and_return(nil)
       n1 = REXML::Text.new('||title||')
       subject.next_node(n1)
+      subject.end_of_document
       n1.value.should == ''
     end
   end
