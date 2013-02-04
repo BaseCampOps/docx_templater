@@ -1,12 +1,16 @@
 require 'rexml/document'
 require 'docx/placeholder_observer'
+
 module Docx
 	class DocumentReplacer
+
     attr_reader :doc, :observer
+
     def initialize(str, data_provider)
       @doc = REXML::Document.new(str)
       @observer = Docx::PlaceholderObserver.new(data_provider)
       walk_node(@doc.root)
+      @observer.end_of_document
     end
 
     def replaced
@@ -14,6 +18,7 @@ module Docx
     end
 
     private
+
     def walk_node(node)
       if node.is_a?(REXML::Element)
         node.children.each do |n|
@@ -23,5 +28,6 @@ module Docx
         observer.next_node(node)
       end
     end
+
 	end
 end
