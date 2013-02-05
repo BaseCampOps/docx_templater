@@ -6,6 +6,8 @@ Docx Templater
 ==============
 
 Use .docx as reusable templates
+
+In your word document put placeholder names in double pipes || e.g. ||client_email1||
    
 Example usage:
 ```ruby
