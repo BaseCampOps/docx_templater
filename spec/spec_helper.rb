@@ -6,19 +6,19 @@ RSpec.configure do |config|
 end
 
 def get_header_string(file_path)
-  unzipped = Zip::ZipFile.new(file_path)
+  unzipped = Zip::File.new(file_path)
   entries = unzipped.entries.select do |e| e.name =~ /word\/header/ end
   entries.inject("") do |str, e| str << e.get_input_stream.read end
 end
 
 def get_footer_string(file_path)
-  unzipped = Zip::ZipFile.new(file_path)
+  unzipped = Zip::File.new(file_path)
   entries = unzipped.entries.select do |e| e.name =~ /word\/footer/ end
   entries.inject("") do |str, e| str << e.get_input_stream.read end
 end
 
 def get_body_string(file_path)
-  unzipped = Zip::ZipFile.new(file_path)
+  unzipped = Zip::File.new(file_path)
   entries = unzipped.entries.select do |e| e.name =~ /word\/document/ end
   entries.inject("") do |str, e| str << e.get_input_stream.read end
 end

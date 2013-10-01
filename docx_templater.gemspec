@@ -11,7 +11,9 @@ Gem::Specification.new do |s|
     "lib/docx/document_replacer.rb",
     "lib/docx/nodes_to_fix.rb",
     "lib/docx/placeholder_observer.rb"]
-  s.add_runtime_dependency "rubyzip", ["~> 0.9.9"]
-  s.add_runtime_dependency "htmlentities", ["~> 4.3.1"]
+  s.add_runtime_dependency "rubyzip", "~> 1.0.0"
+  s.add_runtime_dependency "htmlentities", "~> 4.3.1"
+  s.add_development_dependency "rake", "~> 10.1"
+  s.add_development_dependency "rspec", "~> 2.14"
   s.homepage    = 'http://rubygems.org/gems/docx_templater'
 end

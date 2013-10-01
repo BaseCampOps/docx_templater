@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'zip/zipfilesystem'
+require 'zip'
 require 'tempfile'
 describe DocxTemplater do
   let(:file_path){ File.expand_path("../../fixtures/TestFile.docx",__FILE__) }

@@ -1,4 +1,5 @@
-require 'zip/zipfilesystem'
+# require 'zip/zipfilesystem'
+require 'zip'
 require 'htmlentities'
 require 'docx/argument_combiner'
 require 'docx/document_replacer'
@@ -22,9 +23,9 @@ class DocxTemplater
 
   def replace_file_with_content(file_path, data_provider)
     # Rubyzip doesn't save it right unless saved like this: https://gist.github.com/e7d2855435654e1ebc52
-    zf = Zip::ZipFile.new(file_path) # Put original file name here
+    zf = Zip::File.new(file_path) # Put original file name here
 
-    buffer = Zip::ZipOutputStream.write_buffer do |out|
+    buffer = Zip::OutputStream.write_buffer do |out|
       zf.entries.each do |e|
         process_entry(e, out, data_provider)
       end
