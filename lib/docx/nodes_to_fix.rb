@@ -28,13 +28,15 @@ module Docx
         range = obj[:range]
         new_val = node.value
         new_val[range] = value.to_s || ''
-        new_nodes(new_val).each do |new_node|
-          parent.insert_after(node,new_node)
+        if parent && new_val.include?("\n")
+          new_nodes(new_val).each do |new_node|
+            parent.insert_after(node,new_node)
+          end
+          node.remove
+        else
+          node.value = new_val
         end
-        node.remove
-        if new_val =~ /^\s+/ && parent
-          parent.add_attribute('xml:space', 'preserve')
-        end
+        parent.add_attribute('xml:space', 'preserve') if parent && new_val.include?(" ")
         self.value = nil
       end
     end
