@@ -32,7 +32,7 @@ module Docx
           parent.insert_after(node,new_node)
         end
         node.remove
-        if new_val =~ /^\s+/ && node.parent
+        if new_val =~ /^\s+/ && parent
           parent.add_attribute('xml:space', 'preserve')
         end
         self.value = nil
@@ -50,7 +50,7 @@ module Docx
         list << br
       end
       node_list.pop
-      node_list
+      node_list.reverse
     end
   end
 end
