@@ -3,6 +3,8 @@ require 'zip'
 require 'htmlentities'
 require 'docx/argument_combiner'
 require 'docx/document_replacer'
+require 'docx/simple_node_replacer'
+require 'docx/line_converting_node_replacer'
 
 # Use .docx as reusable templates
 # 
