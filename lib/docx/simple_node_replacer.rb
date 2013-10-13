@@ -11,6 +11,6 @@ module Docx
         node.value = new_val
         parent.add_attribute('xml:space', 'preserve') if parent && new_val.include?(" ")
       end
-    end
+    end    
   end
 end
