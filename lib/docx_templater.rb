@@ -3,6 +3,7 @@ require 'zip'
 require 'htmlentities'
 require 'docx/argument_combiner'
 require 'docx/document_replacer'
+require 'docx/newline_replacer'
 
 # Use .docx as reusable templates
 # 
@@ -41,11 +42,14 @@ class DocxTemplater
   def entry_requires_replacement?(entry)
     entry.ftype != :directory && entry.name =~ /document|header|footer/
   end
-  
+
+  private
+  attr_reader :options
+
   def get_entry_content(entry, data_provider)
     file_string = entry.get_input_stream.read
     if entry_requires_replacement?(entry)
-      replacer = Docx::DocumentReplacer.new(file_string, data_provider)
+      replacer = Docx::DocumentReplacer.new(file_string, data_provider, options)
       replacer.replaced
     else
       file_string
