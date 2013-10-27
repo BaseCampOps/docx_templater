@@ -22,21 +22,22 @@ module Docx
     end
 
     def replace_text_node(parent, node)
-      text = node.to_s
-      list = text.split("\n")
-        .map{|str| str_to_text_node(str)}
-        .flat_map{ |txt| [txt,br] }
-      list.pop #remove trailing br
-      list.reverse.each do |new_node|
+      list_of_new_nodes(node).reverse.each do |new_node|
         parent.insert_after(node, new_node)
       end
       node.remove
     end
 
-    def br
+    def line_break_node
       br = REXML::Element.new('w:br')
       br.add_attribute('w:type', 'text-wrapping')
       br
+    end
+
+    def list_of_new_nodes(node)
+       node.to_s.split("\n")
+        .map{|str| str_to_text_node(str)}
+        .flat_map{ |txt| [txt,line_break_node] }[0..-2]
     end
 
     def str_to_text_node(str)

@@ -9,4 +9,15 @@ describe Docx::NewlineReplacer do
     replacer.replace
     xml_doc.to_s.should include("<w:t>Leslie<w:br w:type='text-wrapping'/>Knope</w:t>")
   end
+
+  context "multiple newlines" do
+    let(:xml_str){ "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><w:hdr xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><w:t>Leslie\nKnope\nloves\nBen\nWyatt</w:t></w:hdr>" }
+
+    it "replaces all newlines in a single node" do
+      replacer.replace
+      str = xml_doc.to_s
+      str.should include("Leslie<w:br w:type='text-wrapping'/>Knope")
+      str.should include("Ben<w:br w:type='text-wrapping'/>Wyatt")
+    end
+  end
 end
