@@ -13,11 +13,15 @@ module Docx
 
     def walk(node)
       node.children.each do |child|
-        if child.node_type == :text
-          replace_text_node(node,child)
-        else
-          walk(child)
-        end
+        replace_text_node_or_continue_walking(node, child)
+      end
+    end
+
+    def replace_text_node_or_continue_walking(node, child)
+      if child.node_type == :text
+        replace_text_node(node, child)
+      else
+        walk(child)
       end
     end
 
@@ -37,7 +41,7 @@ module Docx
     def list_of_new_nodes(node)
        node.to_s.split("\n")
         .map{|str| str_to_text_node(str)}
-        .flat_map{ |txt| [txt,line_break_node] }[0..-2]
+        .flat_map{ |txt| [txt, line_break_node] }[0..-2]
     end
 
     def str_to_text_node(str)
