@@ -30,8 +30,6 @@ module Docx
 
     def line_break_node
       br = REXML::Element.new('w:br')
-      br.add_attribute('w:type', 'text-wrapping')
-      br
     end
 
     def list_of_new_nodes(node)
@@ -41,7 +39,10 @@ module Docx
     end
 
     def str_to_text_node(str)
-      REXML::Text.new(str)
+      respect_whitespace = false
+      parent = nil
+      raw_text = true
+      REXML::Text.new(str, respect_whitespace, parent, raw_text)
     end
   end
 end
