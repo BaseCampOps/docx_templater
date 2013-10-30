@@ -33,5 +33,12 @@ describe "DocxTemplater :convert_newlines" do
       body.should include("Be excellent to eachother ~Bill and Ted\nTyping is not the bottlneck\nDo something awesome.")
     end
   end
+
+  context "default" do
+    let(:options){ {} }
+    it "converts newlines" do
+      body.should include("Bill and Ted<w:br/>Typing")
+    end
+  end
 end
 

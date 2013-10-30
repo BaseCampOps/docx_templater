@@ -43,7 +43,7 @@ module Docx
     end
 
     def str_to_text_node(str)
-      respect_whitespace = false
+      respect_whitespace = true
       parent = nil
       raw_text = true
       REXML::Text.new(str, respect_whitespace, parent, raw_text)

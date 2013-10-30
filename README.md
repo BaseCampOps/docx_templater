@@ -25,11 +25,10 @@ Example usage:
 Newline Conversion
 ==================
 
-Sometimes of one of your replacement values is meant to span multiple lines it can be useful to convert newlines into line breaks in the docx file.
+By default newlines in replacement values are converted to word document linebreak. If you need to ignore newlines you can pass a flag.
 
-This can be accomplishes with the :convert_newlines option like this:
 ```ruby
-DocxTemplater.new(convert_newlines: true)
+DocxTemplater.new(convert_newlines: false)
   .replace_file_with_content('path/to/file.docx',
     {quotes: "Be Excellent\nTo each other.\n~Bill and Ted's"})
 ```
