@@ -22,6 +22,17 @@ Example usage:
      File.open("path/to/mydocument.docx", "wb") {|f| f.write(buffer.string) }
 ```
 
+Newline Conversion
+==================
+
+By default newlines in replacement values are converted to word document linebreak. If you need to ignore newlines you can pass a flag.
+
+```ruby
+DocxTemplater.new(convert_newlines: false)
+  .replace_file_with_content('path/to/file.docx',
+    {quotes: "Be Excellent\nTo each other.\n~Bill and Ted's"})
+```
+
 Planned Changes
 ===============
 
