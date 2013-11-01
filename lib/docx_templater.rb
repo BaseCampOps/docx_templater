@@ -4,6 +4,7 @@ require 'htmlentities'
 require 'docx/argument_combiner'
 require 'docx/document_replacer'
 require 'docx/newline_replacer'
+require 'docx/paragraph_replacer'
 
 # Use .docx as reusable templates
 # 

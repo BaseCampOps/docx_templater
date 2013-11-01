@@ -5,31 +5,19 @@ module Docx
     end
 
     def replace
-      walk(doc.root)
+      @doc.elements.each("//w:p/w:r/w:t") {|textElement| textElement.children.each do |text| 
+    	    	replace_text_node(textElement, text)
+    	end  }
     end
 
     private
     attr_reader :doc
 
-    def walk(node)
-      node.children.each do |child|
-        replace_text_node_or_continue_walking(node, child)
+    def replace_text_node(textElement, text)
+      list_of_new_nodes(text).reverse.each do |new_node|
+        textElement.insert_after(text, new_node)
       end
-    end
-
-    def replace_text_node_or_continue_walking(node, child)
-      if child.node_type == :text
-        replace_text_node(node, child)
-      else
-        walk(child)
-      end
-    end
-
-    def replace_text_node(parent, node)
-      list_of_new_nodes(node).reverse.each do |new_node|
-        parent.insert_after(node, new_node)
-      end
-      node.remove
+      text.remove
     end
 
     def line_break_node
@@ -40,6 +28,7 @@ module Docx
        node.to_s.split("\n")
         .map{|str| str_to_text_node(str)}
         .flat_map{ |txt| [txt, line_break_node] }[0..-2]
+        
     end
 
     def str_to_text_node(str)
