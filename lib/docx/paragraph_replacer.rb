@@ -46,7 +46,7 @@ module Docx
 	   		t_element_text=""
 	   		t_element.children.each do |text|
 	   			t_element_text+=text.to_s
-	   		end
+	   		end	
 	   		t_split = t_element_text.split('|paragraph|', 2)
 		   	#new_r.add(str_to_text_node(t_split[0]))
 		   	if t_split.size>1
@@ -55,7 +55,6 @@ module Docx
 			   	new_t.add(str_to_text_node(t_split.shift.to_s))
 			   	new_r.add(new_t)
 			   	t_element.text=str_to_text_node(t_split.join.to_s)
-			   	#puts t_element.text
 			   	split_and_replace_p(t_element.parent.parent)
 		   	else
 			   	new_t = REXML::Element.new('w:t')
