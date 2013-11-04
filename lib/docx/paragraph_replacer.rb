@@ -61,6 +61,7 @@ module Docx
 			   	new_t.add_attributes(t_element.attributes)
 			    new_t.add(str_to_text_node(t_element_text))
 			    new_r.add(new_t)
+			    t_element.remove
 		   	end
 	   	end
    	end
