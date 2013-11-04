@@ -46,7 +46,7 @@ describe "DocxTemplater :convert_paragraphs" do
 	  let(:replacements){ {user: 'Mikey', quotes: "rawr|paragraph|Be excellent to eachother ~Bill and Ted\nTyping is not the bottlneck\r\nDo something awesome."} }
 	  it "converts paragraph markers" do
 	  	body.should_not include "|paragraph|"
-	  	body.should include "<w:p><w:pPr><w:jc w:val='center'/></w:pPr><w:r><w:t>rawr</w:t></w:r></w:p><w:p><w:r><w:t>Be excellent to eachother ~Bill and Ted<w:br/>Typing is not the bottlneck<w:br/>Do something awesome.</w:t></w:r>"
+	  	body.should include "<w:p><w:pPr><w:jc w:val='center'/></w:pPr><w:r><w:t>rawr</w:t></w:r></w:p><w:p><w:pPr><w:jc w:val='center'/></w:pPr><w:r><w:t>Be excellent to eachother ~Bill and Ted<w:br/>Typing is not the bottlneck<w:br/>Do something awesome.</w:t></w:r>"
 	  end
   end
 end
