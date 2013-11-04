@@ -20,7 +20,7 @@ module Docx
    		#add formatting to new p's also later using this
    		p_element.children.each do |child|
    			#child.each_element_with_text {|text| puts text} useful to test for split
-   			child.name=="r" ? add_or_replace_r(new_p,child) : new_p.add(child.deep_clone)
+   			child.name=="r" ? add_or_replace_r(new_p,child) : add_dont_replace(new_p, child)
    		end
    		p_element.remove
    	end
@@ -31,7 +31,7 @@ module Docx
    		#puts "r had formating" if r_element.first.name == "rPr"  if r_element.size>1
    		#add formatting to new r's also later using this
    		r_element.children.each do |child|
-   			child.name=="t" ? add_or_replace_t(new_r,child) : new_r.add(child.deep_clone)
+   			child.name=="t" ? add_or_replace_t(new_r,child) : add_dont_replace(new_r, child)
    		end
    		r_element.remove
    	end
@@ -64,6 +64,11 @@ module Docx
 			    t_element.remove
 		   	end
 	   	end
+   	end
+   	
+   	def add_dont_replace(parent, element)
+   		cloned = element.deep_clone
+   		parent.add(cloned)
    	end
 
     def str_to_text_node(str)
