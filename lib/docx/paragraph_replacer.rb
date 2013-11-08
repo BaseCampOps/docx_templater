@@ -16,8 +16,6 @@ module Docx
 	def split_and_replace_p(p_element)
    		new_p= REXML::Element.new('w:p')
    		p_element.parent.insert_before(p_element, new_p)
-   		#puts "p had formating" if p_element.first.name == "pPr" if p_element.size>1
-   		#add formatting to new p's also later using this
    		p_element.children.each do |child|
    			#child.each_element_with_text {|text| puts text} useful to test for split
    			child.name=="r" ? add_or_replace_r(new_p,child) : add_dont_replace(new_p, child)
@@ -28,8 +26,6 @@ module Docx
    	def add_or_replace_r(new_p, r_element)
    		new_r= REXML::Element.new('w:r')
    		new_p.add(new_r)
-   		#puts "r had formating" if r_element.first.name == "rPr"  if r_element.size>1
-   		#add formatting to new r's also later using this
    		r_element.children.each do |child|
    			child.name=="t" ? add_or_replace_t(new_r,child) : add_dont_replace(new_r, child)
    		end
@@ -48,7 +44,6 @@ module Docx
 	   			t_element_text+=text.to_s
 	   		end	
 	   		t_split = t_element_text.split('|paragraph|', 2)
-		   	#new_r.add(str_to_text_node(t_split[0]))
 		   	if t_split.size>1
 			   	new_t = REXML::Element.new('w:t')
 			   	new_t.add_attributes(t_element.attributes)
