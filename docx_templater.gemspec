@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Uses a .docx file with keyword tags within '||' as a template. This gem will then open the .docx and replace those tags with dynamically defined content."
   s.authors     = ["Paul Smith", "Michael Ries"]
   s.email       = 'pauls@basecampops.com'
-  spec.license  = 'MIT'
+  s.license     = 'MIT'
   s.files       = ["lib/docx_templater.rb",
     "lib/docx/argument_combiner.rb",
     "lib/docx/document_replacer.rb",
