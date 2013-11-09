@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    docx_templater (0.2.2)
+    docx_templater (0.2.3)
       htmlentities (~> 4.3.1)
       rubyzip (~> 1.1)
 
