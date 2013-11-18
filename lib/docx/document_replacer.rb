@@ -11,8 +11,6 @@ module Docx
       @observer = Docx::PlaceholderObserver.new(data_provider)
       walk_node(doc.root)
       @observer.end_of_document
-      convert_paragraphs
-      convert_newlines if opts.fetch(:convert_newlines){ true }
     end
 
     def replaced
