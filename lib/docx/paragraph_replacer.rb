@@ -2,10 +2,29 @@ module Docx
   class ParagraphReplacer
     def initialize(doc)
       @doc = doc
+      @nodes_with_paragraph_markers = Array.new
+      find_breaks
+    end
+    
+    def find_breaks
+		@doc.elements.each("//w:p/w:r/w:t") {|textElement| textElement.children.each do |text| 
+      		check_and_add_paragraphs(text)
+	  	end
+	  	}
+    end
+    
+    def check_and_add_paragraphs(text)
+    	if @nodes_with_paragraph_markers.nil? == false || @nodes_with_paragraph_markers.last != p_parent(text)
+    		@nodes_with_paragraph_markers << p_parent(text) if text.to_s.include? '|paragraph|'
+    	end
+    end
+    
+    def p_parent(text_element)
+    	text_element.parent.parent.parent
     end
 
     def replace
-      @doc.elements.each("//w:p") do |p_element| 
+      @nodes_with_paragraph_markers.each do |p_element| 
       	split_and_replace_p(p_element)
       end
     end
