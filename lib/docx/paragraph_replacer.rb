@@ -14,13 +14,14 @@ module Docx
     end
     
     def check_and_add_paragraphs(text)
-    	if @nodes_with_paragraph_markers.nil? == false || @nodes_with_paragraph_markers.last != p_parent(text)
+    	if @nodes_with_paragraph_markers.nil? || !(@nodes_with_paragraph_markers.include? p_parent(text))
     		@nodes_with_paragraph_markers << p_parent(text) if text.to_s.include? '|paragraph|'
     	end
     end
     
     def p_parent(text_element)
-    	text_element.parent.parent.parent
+    	parent = text_element.parent
+    	parent.name=='p' ? (return parent) : p_parent(parent)
     end
 
     def replace
