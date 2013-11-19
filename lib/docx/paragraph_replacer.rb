@@ -3,20 +3,26 @@ module Docx
     def initialize(doc)
       @doc = doc
       @nodes_with_paragraph_markers = Array.new
-      find_breaks
+      search_for_wp
     end
     
-    def find_breaks
-		@doc.elements.each("//w:p/w:r/w:t") {|textElement| textElement.children.each do |text| 
-      		check_and_add_paragraphs(text)
-	  	end
-	  	}
-    end
-    
-    def check_and_add_paragraphs(text)
-    	if @nodes_with_paragraph_markers.nil? || !(@nodes_with_paragraph_markers.include? p_parent(text))
-    		@nodes_with_paragraph_markers << p_parent(text) if text.to_s.include? '|paragraph|'
+    def search_for_wp
+    	@doc.elements.each("//w:p") do |pElement|
+    		search_for_text(pElement)
     	end
+    end
+    
+    def search_for_text(pElement)
+    	pElement.children.each do |rElement| 
+    		rElement.children.each do |tElement|
+    			tElement.children.each do |text|
+    				if text.to_s.include? '|paragraph|'
+						@nodes_with_paragraph_markers << p_parent(text)
+						return
+					end
+				end
+			end
+	  	end
     end
     
     def p_parent(text_element)
@@ -30,7 +36,7 @@ module Docx
       end
     end
 
-    private 
+    private
     attr_reader :doc
 
 	def split_and_replace_p(p_element)
