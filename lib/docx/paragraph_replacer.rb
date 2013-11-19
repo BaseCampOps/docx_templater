@@ -20,7 +20,8 @@ module Docx
     end
     
     def p_parent(text_element)
-    	parent = text_element.parent.parent.parent
+    	parent = text_element.parent
+    	parent.name=='p' ? (return parent) : p_parent(parent)
     end
 
     def replace
@@ -29,7 +30,7 @@ module Docx
       end
     end
 
-    private
+    private 
     attr_reader :doc
 
 	def split_and_replace_p(p_element)
