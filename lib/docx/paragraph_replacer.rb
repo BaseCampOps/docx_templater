@@ -20,14 +20,13 @@ module Docx
     end
     
     def p_parent(text_element)
-    	parent = text_element.parent
-    	parent.name=='p' ? (return parent) : p_parent(parent)
+    	parent = text_element.parent.parent.parent
     end
 
     def replace
-      #@nodes_with_paragraph_markers.each do |p_element| 
-      #	split_and_replace_p(p_element)
-      #end
+      @nodes_with_paragraph_markers.each do |p_element| 
+      	split_and_replace_p(p_element)
+      end
     end
 
     private
