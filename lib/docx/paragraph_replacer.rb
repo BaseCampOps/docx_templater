@@ -25,9 +25,9 @@ module Docx
     end
 
     def replace
-      @nodes_with_paragraph_markers.each do |p_element| 
-      	split_and_replace_p(p_element)
-      end
+      #@nodes_with_paragraph_markers.each do |p_element| 
+      #	split_and_replace_p(p_element)
+      #end
     end
 
     private
