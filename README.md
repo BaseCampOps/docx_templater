@@ -33,6 +33,19 @@ DocxTemplater.new(convert_newlines: false)
     {quotes: "Be Excellent\nTo each other.\n~Bill and Ted's"})
 ```
 
+Paragraph Conversion
+==================
+
+|paragraph| tag in replacements are converted to paragraph breaks, like new lines but proper formatting.
+
+Still glitchy and experimental, but sufficient for my current needs. 
+Duplicates 2nd half of text when tag placed directly in template instead of through parameters, but why do that when you can just hit 'enter' in the template :P
+Multiple p tags in one replacement still untested
+
+```ruby
+    {quotes: "Be Excellent|paragraph|To each other.\n~Bill and Ted's"})
+```
+
 Planned Changes
 ===============
 
