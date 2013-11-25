@@ -13,14 +13,16 @@ module Docx
     end
     
     def search_for_text(pElement)
-    	pElement.elements.each("w:r/w:t") do |tElement|
-    		tElement.children.each do |text|
-    			if text.to_s.include? '|paragraph|'
-					@nodes_with_paragraph_markers << p_parent(text)
-					return
+    	pElement.children.each do |rElement| 
+    		rElement.children.each do |tElement|
+    			tElement.children.each do |text|
+    				if text.to_s.include? '|paragraph|'
+						@nodes_with_paragraph_markers << p_parent(text)
+						return
+					end
 				end
 			end
-		end
+	  	end
     end
     
     def p_parent(text_element)
