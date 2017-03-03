@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
     "lib/docx/newline_replacer.rb",
     "lib/docx/nodes_to_fix.rb",
     "lib/docx/placeholder_observer.rb"]
-  s.add_runtime_dependency "rubyzip", "~> 1.1"
+  s.add_runtime_dependency "rubyzip", ">= 1.1"
   s.add_runtime_dependency "htmlentities", "~> 4.3.1"
   s.add_development_dependency "rake", "~> 10.1"
   s.add_development_dependency "rspec", "~> 2.14"
