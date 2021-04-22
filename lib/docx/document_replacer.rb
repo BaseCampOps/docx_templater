@@ -8,7 +8,7 @@ module Docx
 
     def initialize(str, data_provider, opts = {})
       @doc = REXML::Document.new(str)
-      @observer = Docx::PlaceholderObserver.new(data_provider)
+      @observer = Docx::PlaceholderObserver.new(data_provider, opts)
       walk_node(doc.root)
       @observer.end_of_document
       convert_newlines if opts.fetch(:convert_newlines){ true }

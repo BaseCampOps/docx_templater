@@ -3,7 +3,10 @@ require 'docx/nodes_to_fix'
 module Docx
   class PlaceholderObserver
     attr_reader :data_provider
-    def initialize(data_provider)
+    def initialize(data_provider, opts = {})
+      @delimiter = opts.fetch(:delimiter, '||').to_s
+      raise ArgumentError.new('Delimiter must be present.') if delimiter.nil? || delimiter.strip.empty?
+      raise ArgumentError.new('Delimiter must consist of same characters.') if delimiter_chars_not_same
       @data_provider = data_provider
       @buffer = ''
       @state = :waiting_for_opening
@@ -23,16 +26,16 @@ module Docx
 
     private
 
-    attr_accessor :state, :buffer, :nodes_to_fix
+    attr_accessor :state, :buffer, :nodes_to_fix, :delimiter
 
     def next_char(node, index, c)
       send(state, node, index, c)
     end
 
     def waiting_for_opening(node, index, c)
-      if c == '|'
+      if c == delimiter[0]
         add_char_to_buffer(node,index,c)
-        if buffer == '||'
+        if buffer == delimiter
           self.state = :capturing_placeholder
         end
       else
@@ -42,8 +45,8 @@ module Docx
 
     def capturing_placeholder(node, index, c)
       add_char_to_buffer(node,index,c)
-      if buffer[-2..-1] == '||'
-        key = buffer[2..-3]
+      if buffer[-delimiter.length..-1] == delimiter
+        key = buffer[delimiter.length..-(delimiter.length + 1)]
         if data_provider.has_key?(key.to_sym)
           new_value = data_provider[key.to_sym]
           save_fix_for_later(new_value)
@@ -74,6 +77,11 @@ module Docx
         nodes_to_fix.fix
       end
       @fixes_to_make = []
+    end
+
+    def delimiter_chars_not_same
+      first_char = delimiter[0]
+      delimiter.split(//).any? { |c| c != first_char }
     end
   end
 end
