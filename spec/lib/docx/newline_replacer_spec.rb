@@ -7,7 +7,7 @@ describe Docx::NewlineReplacer do
 
   it "it replaces \\n with <w:br/>" do
     replacer.replace
-    xml_doc.to_s.should include("<w:t>Leslie<w:br/>Knope</w:t>")
+    xml_doc.to_s.should include("<w:t>Leslie</w:t><w:br/><w:t>Knope</w:t>")
   end
 
   context "multiple newlines" do
@@ -16,8 +16,7 @@ describe Docx::NewlineReplacer do
     it "replaces all newlines in a single node" do
       replacer.replace
       str = xml_doc.to_s
-      str.should include("Leslie<w:br/>Knope")
-      str.should include("Ben<w:br/>Wyatt")
+      str.should include("<w:t>Leslie</w:t><w:br/><w:t>Knope</w:t><w:br/><w:t>loves</w:t><w:br/><w:t>Ben</w:t><w:br/><w:t>Wyatt</w:t>")
     end
   end
 end

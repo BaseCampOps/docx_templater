@@ -17,7 +17,7 @@ describe "DocxTemplater :convert_newlines" do
     let(:options){ {convert_newlines: true} }
     it "can convert newlines with docx equivalents" do
       body.should_not include("||quotes||")
-      body.should include("<w:t>Be excellent to eachother ~Bill and Ted<w:br/>Typing is not the bottlneck<w:br/>Do something awesome.</w:t>")
+      body.should include("<w:t>Be excellent to eachother ~Bill and Ted</w:t><w:br/><w:t>Typing is not the bottlneck</w:t><w:br/><w:t>Do something awesome.</w:t>")
     end
 
     it "does not double escape special characters" do
@@ -37,7 +37,7 @@ describe "DocxTemplater :convert_newlines" do
   context "default" do
     let(:options){ {} }
     it "converts newlines" do
-      body.should include("Bill and Ted<w:br/>Typing")
+      body.should include("Bill and Ted</w:t><w:br/><w:t>Typing")
     end
   end
 end
