@@ -19,7 +19,7 @@ module Docx
 
     def replace_text_node_or_continue_walking(node, child)
       if child.node_type == :text
-        replace_text_node(node, child)
+        replace_text_node(node, child) if child.to_s.include?("\n")
       else
         walk(child)
       end
