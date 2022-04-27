@@ -19,7 +19,9 @@ module Docx
 
     def replace_text_node_or_continue_walking(node, child)
       if child.node_type == :text
-        replace_text_node(node, child) if child.to_s.include?("\n")
+        if (node.node_type == :element && node.expanded_name == 'w:t') && child.to_s.include?("\n")
+          replace_text_node(node, child)
+        end
       else
         walk(child)
       end
